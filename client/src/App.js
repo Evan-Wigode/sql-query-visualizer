@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, TextField, Button, Paper, Typography, Box } from '@mui/material';
+import { Container, TextField, Button, Paper, Typography, Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 function App() {
@@ -47,12 +47,40 @@ function App() {
           </form>
         </Paper>
 
-        {results && (
+        {results && results.status === 'success' && (
           <Paper elevation={3} style={{ marginTop: '20px', padding: '20px' }}>
             <Typography variant="h6" gutterBottom>
               Results:
             </Typography>
-            <pre>{JSON.stringify(results, null, 2)}</pre>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {results.data.columns.map((col, idx) => (
+                    <TableCell key={idx}>{col}</TableCell>
+                  ))}
+                 </TableRow>
+              </TableHead>
+              <TableBody>
+                {results.data.rows.map((row, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    {row.map((cell, cellIdx) => (
+                      <TableCell key={cellIdx}>{cell}</TableCell>
+                    ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
+      )}
+
+        {results && results.status === 'error' && (
+          <Paper elevation={3} style={{ marginTop: '20px', padding: '20px', backgroundColor: '#ffebee' }}>
+            <Typography variant="h6" gutterBottom>
+              Error:
+            </Typography>
+            <Typography variant="body1">
+              {results.message}
+            </Typography>
           </Paper>
         )}
       </Box>

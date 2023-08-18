@@ -27,10 +27,18 @@ def execute_query():
         cursor.execute(query)
         # Commit changes to the database. Important for INSERT, UPDATE, DELETE
         conn.commit()
-        results = cursor.fetchall()
+
+        rows = cursor.fetchall()
+
+        columns = [column[0] for column in cursor.description]
+        data = {
+            "columns": columns,
+            "rows": rows
+        }
+
         conn.close()
 
-        return jsonify({'status': 'success', 'data': results})
+        return jsonify({'status': 'success', 'data': data})
 
     except sqlite3.Error as e:
         return jsonify({'status': 'error', 'message': str(e)})
