@@ -24,9 +24,15 @@ def execute_query():
     try:
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
+
+        # Execute the provided query
         cursor.execute(query)
+
         # Commit changes to the database. Important for INSERT, UPDATE, DELETE
         conn.commit()
+
+        # Always fetch the updated table data after any query
+        cursor.execute("SELECT * FROM SAMPLE")
 
         rows = cursor.fetchall()
 
